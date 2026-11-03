@@ -1,0 +1,36 @@
+from google import genai
+
+# Connect to Gemini
+client = genai.Client(api_key="PASTE_YOUR_KEY_HERE")
+
+system_rules = """
+You are a Dungeon Master running a fun fantasy text game for a player.
+Keep responses short (under 3 sentences).
+Describe the scene, present a challenge, and offer 2 to 3 choices labeled A, B, and C.
+If the player invents their own choice, roll with it.
+"""
+
+chat = client.chats.create(
+    model="gemini-2.5-flash",
+    config=genai.types.GenerateContentConfig(
+        system_instruction=system_rules
+    )
+)
+
+print("--- Welcome to the Gemini Dungeon! Type 'quit' to exit. ---\n")
+
+# Start game
+first_turn = chat.send_message("Start our adventure! Give me a location and the first challenge.")
+print(first_turn.text)
+
+# Game loop
+while True:
+    user_move = input("\nWhat do you do? > ")
+    if user_move.lower() == "quit":
+        print("Thanks for playing!")
+        break
+    
+    response = chat.send_message(user_move)
+    print(f"\n{response.text}")
+
+PASTE_YOUR_KEY_HERE : AQ.Ab8RN6JcK-yh8d3MWWUn42eOwBnxpXFV-cCJPsswSu0BZPVqAA
